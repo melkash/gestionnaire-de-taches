@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ajouter une tâche</title>
+</head>
+<body>
+ <h1>Ajouter une nouvelle tâche</h1>
+ <form action="/tasks" method="POST">
+  <label for="name">Titre:</label>
+  <input type="text" id="name" name="name" required>
+  <br>
+  <label for="description">Description:</label>
+  <input type="text" id="description" name="description" required>
+  <br>
+  <label for="completed">Statut:</label>
+  <select name="completed" id="completed">
+   <option value="false">Non complété</option>
+   <option value="true">Complété</option>
+ </select>
+ <br>
+<button type="submit">Ajouter</button>
+ </form>   
+</body>
+</html>
