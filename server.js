@@ -9,6 +9,7 @@ import methodOverride from 'method-override';
 import session from 'express-session';
 import passport from './config/autoConfig.js';
 import flash from 'connect-flash';
+import MongoStore from 'connect-mongo';
 
 
 
@@ -37,16 +38,22 @@ app.set('view engine', '.hbs')
 app.use(cors())
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
+import MongoStore from 'connect-mongo';
+
 app.use(session({
-  secret: process.env.SESSION_SECRET,
-  resave: false,
-  saveUninitialized: false,
-  cookie: {
-    secure: process.env.NODE_ENV === "production",
-    httpOnly: true, // Rend le cookie inaccessible via JavaScript côté client
-    maxAge: 1000 * 60 * 60 * 24, // Durée de vie : 1 jour
-}
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false,
+    store: MongoStore.create({
+        mongoUrl: process.env.MONGO_URI, // URL de connexion MongoDB
+    }),
+    cookie: {
+        secure: process.env.NODE_ENV === "production",
+        httpOnly: true,
+        maxAge: 1000 * 60 * 60 * 24, // Durée de vie : 1 jour
+    },
 }));
+
 app.use(passport.initialize())
 app.use(passport.session())
 app.use(methodOverride('_method'))
@@ -73,7 +80,7 @@ mongoose.connect(process.env.MONGO_URI)
 // Route de base
 app.get('/', (req, res) => {
  res.send('Gestionnaire de tâches');
-})
+});
 
 // Démarrer le serveur
 app.listen(PORT, () => {

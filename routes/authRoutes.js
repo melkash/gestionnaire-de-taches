@@ -17,15 +17,29 @@ router.post('/register', async (req, res) => {
 });
 
 // connexion 
-router.post('/login', passport.authenticate('local', {
-    successRedirect: '/tasks',
-    failureRedirect: '/auth/login',
-    failureFlash: 'Email ou mot de passe incorrect'
-}));
-
-router.get('/login', (req, res) => {
-    res.render('login'); 
+router.post('/login', (req, res, next) => {
+    console.log('Tentative de connexion avec:', req.body);
+    passport.authenticate('local', (err, user, info) => {
+        if (err) {
+            console.error('Erreur Passport:', err);
+            return next(err);
+        }
+        if (!user) {
+            console.log('Utilisateur non trouvé ou mot de passe incorrect:', info);
+            req.flash('error', 'Email ou mot de passe incorrect'); // Message d'erreur pour l'utilisateur
+            return res.redirect('/auth/login');
+        }
+        req.logIn(user, (err) => {
+            if (err) {
+                console.error('Erreur lors de la connexion de l\'utilisateur:', err);
+                return next(err);
+            }
+            console.log('Connexion réussie pour:', user.email);
+            return res.redirect('/tasks');
+        });
+    })(req, res, next);
 });
+
 
 
 // deconnexion
