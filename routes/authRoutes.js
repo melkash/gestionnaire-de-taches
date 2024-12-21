@@ -14,7 +14,12 @@ router.post('/register', async (req, res) => {
 } catch(error) {
     res.status(500).json({ message: 'Erreur lors de l\'inscription', error })
 }
+}); 
+
+router.get('/login', (req, res) => {
+    res.render('login', { error: req.flash('error') }); // Rends le formulaire de connexion avec les éventuels messages d'erreur
 });
+
 
 // connexion 
 router.post('/login', (req, res, next) => {
