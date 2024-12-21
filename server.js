@@ -79,7 +79,7 @@ mongoose.connect(process.env.MONGO_URI)
 
 // Route de base
 app.get('/', (req, res) => {
- res.send('Gestionnaire de tâches');
+ res.send('/auth/login');
 });
 
 // Démarrer le serveur
