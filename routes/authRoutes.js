@@ -23,23 +23,24 @@ router.get('/login', (req, res) => {
 
 // connexion 
 router.post('/login', (req, res, next) => {
-    console.log('Tentative de connexion avec:', req.body);
+    console.log('Requête POST reçue sur /auth/login avec les données suivantes:', req.body);
+
     passport.authenticate('local', (err, user, info) => {
         if (err) {
-            console.error('Erreur Passport:', err);
+            console.error('Erreur Passport détectée:', err);
             return next(err);
         }
         if (!user) {
-            console.log('Utilisateur non trouvé ou mot de passe incorrect:', info);
+            console.log('Echec de la connexion: utilisateur non trouvé ou mot de passe incorrect:', info);
             req.flash('error', 'Email ou mot de passe incorrect'); // Message d'erreur pour l'utilisateur
             return res.redirect('/auth/login');
         }
         req.logIn(user, (err) => {
             if (err) {
-                console.error('Erreur lors de la connexion de l\'utilisateur:', err);
+                console.error('Erreur lors de la connexion de l\'utilisateur après validation:', err);
                 return next(err);
             }
-            console.log('Connexion réussie pour:', user.email);
+            console.log('Connexion réussie pour l\'utilisateur:', user.email);
             return res.redirect('/tasks');
         });
     })(req, res, next);
