@@ -80,7 +80,9 @@ mongoose.connect(process.env.MONGO_URI)
 
 // Route de base
 app.get('/', (req, res) => {
- res.send('homepage');
+ res.render('homepage', {
+    title: 'Bienvenue sur Mon Gestionnaire de Tâches'
+ });
 });
 
 // Démarrer le serveur
