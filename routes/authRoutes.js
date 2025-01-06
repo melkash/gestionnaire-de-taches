@@ -8,9 +8,17 @@ const router = express.Router()
 router.post('/register', async (req, res) => {
  const { email, password } = req.body;
  try {
-   const newUser = new User ({ email, password});
+
+    if (!email || !password) {
+        return res.status(400).json({ message: 'Email et mot de passe sont requis' });
+    }
+
+   const hashedPassowrd = await bcrypt.hash(password, 10)
+
+   const newUser = new User ({ email, password: hashedPassowrd });
    await newUser.save();
-   res.status(201).json({ message: 'Inscription réussie' })
+   
+   res.redirect('/auth/login')
 } catch(error) {
     res.status(500).json({ message: 'Erreur lors de l\'inscription', error })
 }
@@ -44,7 +52,7 @@ router.post('/login', (req, res, next) => {
             return res.redirect('/tasks');
         });
     })(req, res, next);
-});
+})
 
 
 

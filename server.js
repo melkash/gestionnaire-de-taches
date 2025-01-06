@@ -19,6 +19,7 @@ dotenv.config();
 
 const app = express()
 const PORT = process.env.PORT || 3300;
+
 const hbs = create({ 
     extname: '.hbs',
     defaultLayout: 'main',
@@ -79,7 +80,7 @@ mongoose.connect(process.env.MONGO_URI)
 
 // Route de base
 app.get('/', (req, res) => {
- res.send('/auth/login');
+ res.send('homepage');
 });
 
 // Démarrer le serveur
