@@ -6,11 +6,33 @@
     <title>Gestionnaire de tâches</title>
 </head>
 <body>
- <h1>Liste des tâches</h1>
- <ul>
-    {{#each tasks}}
-    <li>{{this.description}} - {{#if this.status}}Complété{{else}}Non complété{{/if}}</li>
-    {{/each}}
- </ul>   
+    <div class="container mt-5">
+        <h1 class="text-primary text-center">Liste des tâches</h1>
+        <table class="table table-striped mt-4">
+            <thead>
+                <tr>
+                    <th scope="col">Titre</th>
+                    <th scope="col">Description</th>
+                    <th scope="col">Statut</th>
+                    <th scope="col">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#each tasks}}
+                <tr>
+                    <td>{{this.name}}</td>
+                    <td>{{this.description}}</td>
+                    <td>{{#if this.completed}}Complété{{else}}Non complété{{/if}}</td>
+                    <td>
+                        <a href="/tasks/{{this._id}}/edit" class="btn btn-warning btn-sm">Modifier</a>
+                        <form action="/tasks/{{this._id}}?_method=DELETE" method="POST" style="display: inline;">
+                            <button type="submit" class="btn btn-danger btn-sm">Supprimer</button>
+                        </form>
+                    </td>
+                </tr>
+                {{/each}}
+            </tbody>
+        </table>
+    </div>
 </body>
 </html>

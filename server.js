@@ -24,7 +24,11 @@ const hbs = create({
     extname: '.hbs',
     defaultLayout: 'main',
     layoutsDir: 'views/layouts',
-    partialsDir: 'views/partials'
+    partialsDir: 'views/partials',
+    runtimeOptions: {
+        allowProtoPropertiesByDefault: true, 
+        allowProtoMethodsByDefault: true,   
+    }
 })
 
 hbs.handlebars.registerHelper('eq', (a, b) => a === b);
@@ -74,16 +78,40 @@ app.use((req, res, next) => {
 app.use('/tasks', taskRoutes);
 app.use('/auth', authRoutes);
 
-mongoose.connect(process.env.MONGO_URI)
-.then(() => console.log('Connecté à MongoDB'))
-.catch((error) => console.log('Erreur de connection à MongoDB:', error));
 
 // Route de base
 app.get('/', (req, res) => {
  res.render('homepage', {
     title: 'Bienvenue sur Mon Gestionnaire de Tâches'
  });
+}); 
+
+// Route de test pour générer une erreur serveur
+app.get('/test-error', (req, res) => {
+    throw new Error('Ceci est un test d’erreur'); // Simule une erreur
 });
+
+// Middleware pour les erreurs 404 (page non trouvée)
+app.use((req, res) => {
+    res.status(404).render('error', {
+        title: 'Page non trouvée',
+        message: 'La page que vous recherchez n’existe pas.'
+    });
+});
+
+// Middleware pour les erreurs 500 (erreur serveur)
+app.use((err, req, res, next) => {
+    console.error(err.stack); // Log de l'erreur pour le développeur
+    res.status(500).render('error', {
+        title: 'Erreur du serveur',
+        message: 'Une erreur inattendue est survenue. Veuillez réessayer plus tard.'
+    });
+});
+
+mongoose.connect(process.env.MONGO_URI)
+.then(() => console.log('Connecté à MongoDB'))
+.catch((error) => console.log('Erreur de connection à MongoDB:', error));
+
 
 // Démarrer le serveur
 app.listen(PORT, () => {
