@@ -9,12 +9,12 @@
         <ul class="navbar-nav me-auto"> <!-- Liens principaux alignés à gauche -->
           {{#if user}}
             <li class="nav-item">
-              <a class="nav-link" href="/tasks">Liste des tâches</a>
+              <a class="nav-link" href="/exercises">Liste des exercices</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="/tasks/new">Ajouter une tâche</a>
+              <a class="nav-link" href="/exercises/new">Ajouter un exercice</a>
             </li>
-          {{/if}}
+            {{/if}}
         </ul>
         <ul class="navbar-nav ms-auto">
           {{#if user}}
@@ -26,6 +26,9 @@
             <!-- Lien visible pour les utilisateurs non connectés -->
             <li class="nav-item">
               <a class="nav-link" href="/auth/login">Se connecter</a>
+            </li>
+            <li class="nav-item">
+             <a class="nav-link" href="/auth/register">S'inscrire</a>
             </li>
           {{/if}}
         </ul>

@@ -1,55 +1,35 @@
-<!--<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Modifier une tâche</title>
-</head>
-<body>
-    <h1>Modifier le statut de la tâche</h1>
-<form action="/tasks/{{task._id}}?_method=PUT" method="POST">
-     <input type="hidden" name="_method" value="PUT">
-     <label for="title">Titre:</label>
-     <input type="text" id="title" name="title" value="{{task.title}}" required>
-     <br>
-     <label for="description">Description:</label>
-     <input type="text" id="description" name="description" value="{{task.description}}" required>
-     <br>
-     <label for="completed">Statut:</label>
-     <select name="completed" id="completed">
-        <option value="false" {{#unless task.completed}}selected{{/unless}}>Non complété</option>
-        <option value="true" {{#if task.completed}}selected{{/if}}>complété</option>
-      </select>
-      <br>
-      <button type="submit">Mettre à jour</button>
-</form>
-</body>
-</html>-->
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Modifier une tâche</title>
+    <title>Modifier un exercice</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
-<body>
+<body class="bg-light">
     <div class="container mt-5">
-        <h1 class="text-center mb-4">Modifier le statut de la tâche</h1>
-        <form action="/tasks/{{task._id}}?_method=PUT" method="POST" class="p-4 border rounded shadow-sm bg-light">
+        <h1 class="text-center mb-4">Modifier le statut de l'execice</h1>
+         {{#if success}}
+           <div class="alert alert-success text-center">{{success}}</div>
+         {{/if}}
+
+         {{#if error}}
+           <div class="alert alert-danger text-center">{{error}}</div>
+         {{/if}}
+    <form action="/exercises/{{exercise._id}}?_method=PUT" method="POST" class="p-4 border rounded shadow-sm bg-light mb-5">
             <input type="hidden" name="_method" value="PUT">
 
-            <!-- Titre -->
+            <!-- Type -->
             <div class="mb-3">
-                <label for="title" class="form-label">Titre :</label>
+                <label for="type" class="form-label">Type :</label>
                 <input 
                     type="text" 
-                    id="title" 
-                    name="title" 
-                    value="{{task.title}}" 
-                    class="form-control" 
-                    required>
+                    id="type" 
+                    name="type" 
+                    value="{{exercise.type}}" 
+                    class="form-control"
+                    required
+                    placeholder="Entrez le titre de l'exercice">
             </div>
 
             <!-- Description -->
@@ -60,7 +40,41 @@
                     name="description" 
                     class="form-control" 
                     rows="3" 
-                    required>{{task.description}}</textarea>
+                    required
+                    placeholder="Ajoutez des détails sur l'exercice, par exemple : objectifs, lieu, etc...">{{exercise.description}}</textarea>
+            </div>
+
+            <div class="mb-3">
+                <label for="duration" class="form-label">Duration :</label>
+                <input 
+                     type="number"
+                     id="duration"
+                     name="duration"
+                     value="{{exercise.duration}}"
+                     class="form-control"
+                     placeholder="Entrez la durée de l'exercice">
+            </div>
+
+            <div class="mb-3">
+                <label for="distance" class="form-label">Distance :</label>
+                <input 
+                     type="number"
+                     id="distance"
+                     name="distance"
+                     value="{{exercise.distance}}"
+                     class="form-control"
+                     placeholder="Entrez la distance">
+            </div>
+
+            <div class="mb-3">
+                <label for="calories" class="form-label">Calories :</label>
+                <input 
+                     type="number"
+                     id="calories"
+                     name="calories"
+                     value="{{exercise.calories}}"
+                     class="form-control"
+                     placeholder="Entrez les calories dépensées">
             </div>
 
             <!-- Statut -->
@@ -70,8 +84,8 @@
                     name="completed" 
                     id="completed" 
                     class="form-select">
-                    <option value="false" {{#unless task.completed}}selected{{/unless}}>Non complété</option>
-                    <option value="true" {{#if task.completed}}selected{{/if}}>Complété</option>
+                    <option value="false" {{#unless exercise.completed}}selected{{/unless}}>Non complété</option>
+                    <option value="true" {{#if exercise.completed}}selected{{/if}}>Complété</option>
                 </select>
             </div>
 

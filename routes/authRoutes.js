@@ -1,8 +1,7 @@
 import express from 'express';
 import passport from 'passport';
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs';
 import User from '../model/userModel.js';
-
 
 
 const router = express.Router()
@@ -17,9 +16,10 @@ router.post('/register', async (req, res) => {
 
    const hashedPassword = await bcrypt.hash(password, 10)
 
-   const newUser = new User ({ email, password: hashedPassowrd });
+   const newUser = new User ({ email, password: hashedPassword });
    await newUser.save();
-   
+
+   req.flash('success', 'Inscription réussie. Vous pouvez maintenant vous connecter.')
    res.redirect('/auth/login')
 } catch(error) {
     res.status(500).json({ message: 'Erreur lors de l\'inscription', error })
@@ -27,7 +27,7 @@ router.post('/register', async (req, res) => {
 }); 
 
 router.get('/login', (req, res) => {
-    res.render('login', { error: req.flash('error') }); // Rends le formulaire de connexion avec les éventuels messages d'erreur
+    res.render('login', { error: req.flash('error'), success: req.flash('success')}); // Rends le formulaire de connexion avec les éventuels messages d'erreur
 });
 
 router.get('/forgot-password', (req, res) => {
@@ -46,11 +46,13 @@ router.post('/forgot-password', async(req, res) => {
 
         const resetToken = Math.random().toString(36).substring(2);
         console.log(`Token de réinitialisation : ${resetToken}`);
-        req.flash('success', 'un email avec des instructions a été envoyé.')
+        req.flash('success', 'Un email avec des instructions a été envoyé.')
         res.redirect('/auth/login');
     }catch (err) {
       console.error('Erreur lors de la réinitialisation :', err);
-      res.status(500).render('error', { message: 'Une erreur est survenue.'});
+      res.status(500).render('error', { 
+          title: 'Erreur de réinitialisation', 
+          message: 'Une erreur est survenue.'});
     }
 });
 

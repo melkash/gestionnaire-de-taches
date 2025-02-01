@@ -1,6 +1,6 @@
 import express from "express";
-import { getAllTasks, createTask, updateTask, deleteTask } from "../controller/taskController.js";
-import Task from '../model/exerciseModel.js';
+import { getAllExercises, createExercise, updateExercise, deleteExercise } from "../controller/exerciseController.js";
+import Exercise from '../model/exerciseModel.js';
 
 const router = express.Router();
 
@@ -15,29 +15,33 @@ console.log('Utilisateur connecté :', req.isAuthenticated ? req.isAuthenticated
 }
 
 // Routes protégées avec middleware
-router.get('/', ensureAuthenticated, getAllTasks);
-router.post('/', ensureAuthenticated, createTask);
-router.put('/:id', ensureAuthenticated, updateTask);
-router.delete('/:id', ensureAuthenticated, deleteTask);
+router.get('/', ensureAuthenticated, getAllExercises);
+router.post('/', ensureAuthenticated, createExercise);
+router.put('/:id', ensureAuthenticated, updateExercise);
+router.delete('/:id', ensureAuthenticated, deleteExercise);
 
 
 router.get('/new', ensureAuthenticated, (req, res) => {
-    res.render('addTasks');
+    res.render('addExercise');
 });
 
 router.get('/:id/edit', ensureAuthenticated, async (req, res) => { 
     const { id } = req.params;
 
     try {
-        const task = await Task.findById(id);
+        const exercise = await Exercise.findById(id);
 
-        if (!task) {
-            return res.status(404).send('Tâche non trouvée');
+        if (!exercise) {
+            return res.status(404).render('error', {
+            title: 'Erreur',  
+            message: 'Exercice non trouvé'});
         }
 
-        res.render('updateTask', { task });
+        res.render('updateExercise', { exercise });
     } catch (error) {
-        res.status(500).send('Erreur lors du chargement de la tâche');
+        res.status(500).render('error', {
+            title: 'Erreur',
+            message: 'Erreur lors du chargement de l\'exercice'});
     }
 });
 

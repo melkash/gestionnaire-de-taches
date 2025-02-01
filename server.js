@@ -1,7 +1,7 @@
 import express from 'express'
 import mongoose from 'mongoose'
 import cors from 'cors'
-import taskRoutes from './routes/taskRoutes.js'
+import exerciseRoutes from './routes/exerciseRoutes.js'
 import authRoutes from './routes/authRoutes.js';
 import dotenv from 'dotenv'
 import { create } from 'express-handlebars'
@@ -79,7 +79,7 @@ app.use((req, res, next) => {
 
 
 // Routes
-app.use('/tasks', taskRoutes);
+app.use('/exercises', exerciseRoutes);
 app.use('/auth', authRoutes);
 
 
@@ -106,8 +106,6 @@ app.use((req, res) => {
 
 // Middleware pour les erreurs 500 (erreur serveur)
 app.use((err, req, res, next) => {
-    //console.log('Middleware 500 - Title:', 'Erreur du serveur');
-    console.error(err.stack); // Log de l'erreur pour le développeur
     res.status(500).render('error', {
         title: 'Erreur du serveur',
         message: 'Une erreur inattendue est survenue. Veuillez réessayer plus tard.'
