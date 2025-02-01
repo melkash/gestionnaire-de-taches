@@ -1,11 +1,13 @@
 import express from "express";
 import { getAllTasks, createTask, updateTask, deleteTask } from "../controller/taskController.js";
-import Task from '../model/taskModel.js';
+import Task from '../model/exerciseModel.js';
 
 const router = express.Router();
 
 // Middleware pour authentification
 function ensureAuthenticated(req, res, next) {
+console.log('Session :', req.session);
+console.log('Utilisateur connecté :', req.isAuthenticated ? req.isAuthenticated() : false);
     if (req.isAuthenticated()) {
         return next();
     }

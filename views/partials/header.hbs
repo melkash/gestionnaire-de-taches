@@ -1,6 +1,36 @@
 <header>
-  <nav>
-    <a href="/tasks">Liste des tâches</a> |
-    <a href="/tasks/new">Ajouter une tâche</a>
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container">
+      <a class="navbar-brand" href="/">Mon Gestionnaire</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav me-auto"> <!-- Liens principaux alignés à gauche -->
+          {{#if user}}
+            <li class="nav-item">
+              <a class="nav-link" href="/tasks">Liste des tâches</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/tasks/new">Ajouter une tâche</a>
+            </li>
+          {{/if}}
+        </ul>
+        <ul class="navbar-nav ms-auto">
+          {{#if user}}
+            <!-- Liens visibles uniquement pour les utilisateurs connectés -->
+            <li class="nav-item">
+              <a class="nav-link" href="/auth/logout">Se déconnecter</a>
+            </li>
+          {{else}}
+            <!-- Lien visible pour les utilisateurs non connectés -->
+            <li class="nav-item">
+              <a class="nav-link" href="/auth/login">Se connecter</a>
+            </li>
+          {{/if}}
+        </ul>
+      </div>
+    </div>
   </nav>
 </header>
+

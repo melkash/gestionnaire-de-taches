@@ -42,8 +42,9 @@ app.set('view engine', '.hbs')
 
 
 // middleware
-app.use(cors())
-app.use(express.json())
+app.use(cors());
+app.use(express.json());
+app.use(express.static('public'));
 app.use(express.urlencoded({ extended: true }))
 app.use(session({
     secret: process.env.SESSION_SECRET,
@@ -55,8 +56,10 @@ app.use(session({
     cookie: {
         secure: process.env.NODE_ENV === "production",
         httpOnly: true,
-        maxAge: 1000 * 60 * 60 * 24, // Durée de vie : 1 jour
+        maxAge: 1000 * 60 * 60 * 24, 
     },
+
+    rolling : true
 }));
 
 app.use(passport.initialize())
@@ -70,6 +73,7 @@ app.use((req, res, next) => {
   res.locals.success_msg = req.flash('success_msg');
   res.locals.error_msg = req.flash('error_msg');
   res.locals.error = req.flash('error'); // Utilisé par Passport pour les erreurs
+  res.locals.user = req.user;
   next();
 });
 
@@ -88,19 +92,21 @@ app.get('/', (req, res) => {
 
 // Route de test pour générer une erreur serveur
 app.get('/test-error', (req, res) => {
-    throw new Error('Ceci est un test d’erreur'); // Simule une erreur
+    throw new Error( "Ceci est un test d'erreur" ); // Simule une erreur
 });
 
 // Middleware pour les erreurs 404 (page non trouvée)
 app.use((req, res) => {
+    //console.log('Middleware 404 - Title:', 'Page non trouvée');
     res.status(404).render('error', {
         title: 'Page non trouvée',
-        message: 'La page que vous recherchez n’existe pas.'
+        message: "La page que vous recherchez n'existe pas."
     });
 });
 
 // Middleware pour les erreurs 500 (erreur serveur)
 app.use((err, req, res, next) => {
+    //console.log('Middleware 500 - Title:', 'Erreur du serveur');
     console.error(err.stack); // Log de l'erreur pour le développeur
     res.status(500).render('error', {
         title: 'Erreur du serveur',
