@@ -22,7 +22,9 @@ router.delete('/:id', ensureAuthenticated, deleteExercise);
 
 
 router.get('/new', ensureAuthenticated, (req, res) => {
-    res.render('addExercise');
+    res.render('addExercise', { 
+               title : "Ajouter un nouvel exercice" 
+});
 });
 
 router.get('/:id/edit', ensureAuthenticated, async (req, res) => { 
