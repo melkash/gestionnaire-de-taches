@@ -37,7 +37,9 @@ router.get('/:id/edit', ensureAuthenticated, async (req, res) => {
             message: 'Exercice non trouvé'});
         }
 
-        res.render('updateExercise', { exercise });
+        res.render('updateExercise', { 
+            title:  'Modifier un exercice',
+            exercise });
     } catch (error) {
         res.status(500).render('error', {
             title: 'Erreur',

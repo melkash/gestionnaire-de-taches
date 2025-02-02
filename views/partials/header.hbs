@@ -6,7 +6,8 @@
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav me-auto"> <!-- Liens principaux alignés à gauche -->
+        <ul class="navbar-nav me-auto"> 
+           <!-- Liens visibles uniquement pour les utilisateurs connectés -->
           {{#if user}}
             <li class="nav-item">
               <a class="nav-link" href="/exercises">Liste des exercices</a>
@@ -18,7 +19,6 @@
         </ul>
         <ul class="navbar-nav ms-auto">
           {{#if user}}
-            <!-- Liens visibles uniquement pour les utilisateurs connectés -->
             <li class="nav-item">
               <a class="nav-link" href="/auth/logout">Se déconnecter</a>
             </li>
