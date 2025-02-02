@@ -26,8 +26,19 @@ router.post('/register', async (req, res) => {
 }
 }); 
 
+router.get('/register', (req, res) => {
+    res.render('register', {
+        title: 'Créer un compte',
+        error: req.flash('error'),
+        success: req.flash('success')
+    })
+})
+
 router.get('/login', (req, res) => {
-    res.render('login', { error: req.flash('error'), success: req.flash('success')}); // Rends le formulaire de connexion avec les éventuels messages d'erreur
+    res.render('login', {
+        title: 'Connexion',
+        error: req.flash('error'), 
+        success: req.flash('success')}); // Rends le formulaire de connexion avec les éventuels messages d'erreur
 });
 
 router.get('/forgot-password', (req, res) => {
