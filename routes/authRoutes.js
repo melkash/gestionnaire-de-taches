@@ -7,23 +7,31 @@ import User from '../model/userModel.js';
 const router = express.Router()
 
 router.post('/register', async (req, res) => {
- const { email, password } = req.body;
- try {
-
+const { email, password } = req.body; 
+try {
+    
     if (!email || !password) {
         return res.status(400).json({ message: 'Email et mot de passe sont requis' });
     }
+    const existingUser = await User.findOne({email})
+       if(existingUser){
+        req.flash('error', 'Cet email est déjà utilisé, veuillez en choisir un autre')
+        return res.redirect('/auth/register')
+       }
 
-   const hashedPassword = await bcrypt.hash(password, 10)
+    const hashedPassword = await bcrypt.hash(password, 10)
 
    const newUser = new User ({ email, password: hashedPassword });
    await newUser.save();
 
    req.flash('success', 'Inscription réussie. Vous pouvez maintenant vous connecter.')
    res.redirect('/auth/login')
-} catch(error) {
-    res.status(500).json({ message: 'Erreur lors de l\'inscription', error })
-}
+  } catch (error){
+    console.error('Erreur lors de l\'inscription', error);
+    req.flash('error', 'Une erreur est survenue')
+    res.redirect('/auth/register') 
+  }
+
 }); 
 
 router.get('/register', (req, res) => {
