@@ -11,23 +11,19 @@
 <div class="container mt-5">
     <div class="row justify-content-center">
     <div class="col-lg-6 col-md-8 col-sm-10">
-    <h1 class="text-center mb-4">{{title}}</h1>
-    {{#if success}}
-     <div class="alert alert-success" role="alert">
-      {{success}}
-     </div>
-    {{/if}}
-    {{#if error}}
-    <div class="alert alert-danger" role="alert">
-      {{error}}
-    </div>
-    {{/if}}
- <form action="/auth/register" method="POST" class="p-4 border rounded shadow-sm bg-light">
+    <h1 class="text-primary text-center mb-4">{{title}}</h1>
+{{#if error}}
+   <div class="alert alert-danger text-center mb-3">{{error}}</div>
+{{/if}}
+{{#if success}}
+   <div class="alert alert-success text-center mb-3">{{success}}</div>
+{{/if}}
+<form action="/auth/register" method="POST" class="p-4 border rounded shadow-sm">
     <div class="mb-3">
       <label for="email" class="form-label">
         <i class="fas fa-envelope me-2"></i>Email :  
       </label>
-      <input type="email" id="email" name="email" class="form-control" required aria-describedby="emailHelp">
+      <input type="email" id="email" name="email" class="form-control" aria-describedby="emailHelp">
       <small id="emailHelp" class="form-text text-muted">
        Nous ne partagerons jamais votre email avec quelqu'un d'autre.
      </small> 
@@ -36,7 +32,7 @@
       <label for="password" class="form-label">
        <i class="fas fa-lock me-2"></i>Mot de passe :
       </label>
-      <input type="password" id="password" name="password" class="form-control" required minlength="8" aria-describedby="passwordHelp">
+      <input type="password" id="password" name="password" class="form-control" minlength="8" aria-describedby="passwordHelp">
       <small id="passwordHelp" class="form-text text-muted">
        Votre mot de passe doit contenir au moins 8 caractères.
       </small>
