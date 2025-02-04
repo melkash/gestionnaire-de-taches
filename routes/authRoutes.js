@@ -7,12 +7,13 @@ import User from '../model/userModel.js';
 const router = express.Router()
 
 router.post('/register', async (req, res) => {
-const { email, password } = req.body; 
 try {
-    
+    const { email, password } = req.body;
     if (!email || !password) {
-        return res.status(400).json({ message: 'Email et mot de passe sont requis' });
+        req.flash('error', 'Email et mot de passe sont requis')
+        return res.redirect('/auth/register');
     }
+
     const existingUser = await User.findOne({email})
        if(existingUser){
         req.flash('error', 'Cet email est déjà utilisé, veuillez en choisir un autre')
@@ -34,20 +35,28 @@ try {
 
 }); 
 
-router.get('/register', (req, res) => {
+/*router.get('/register', (req, res) => {
+    console.log('Messages flash:', req.flash('error'), req.flash('success')); // Ajout du console.log
     res.render('register', {
         title: 'Créer un compte',
         error: req.flash('error'),
         success: req.flash('success')
-    })
-})
+    });
+});*/
+
+router.get('/register', (req, res) => {
+    /*req.flash('error', 'Test message erreur');*/ // Ajout d'un message d'erreur temporaire
+    res.render('register', { title: 'Créer un compte',
+                            messages: req.flash()});
+});
+
 
 router.get('/login', (req, res) => {
     res.render('login', {
         title: 'Connexion',
         error: req.flash('error'), 
-        success: req.flash('success')}); // Rends le formulaire de connexion avec les éventuels messages d'erreur
-});
+        success: req.flash('success')}); 
+}); // Rends le formulaire de connexion avec les éventuels messages de succès ou d'erreur
 
 router.get('/forgot-password', (req, res) => {
     res.render('forgot-password', { title: 'Mot de passe oublié' });
