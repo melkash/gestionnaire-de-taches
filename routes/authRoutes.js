@@ -2,19 +2,21 @@ import express from 'express';
 import passport from 'passport';
 import bcrypt from 'bcryptjs';
 import User from '../model/userModel.js';
+import crypto from 'crypto';
 
 
 const router = express.Router()
 
 router.post('/register', async (req, res) => {
 try {
-    const { email, password } = req.body;
+    let { email, password } = req.body;
+        email = email.trim()
     if (!email || !password) {
         req.flash('error', 'Email et mot de passe sont requis')
         return res.redirect('/auth/register');
     }
 
-    const existingUser = await User.findOne({email})
+    const existingUser = await User.findOne({ email })
        if(existingUser){
         req.flash('error', 'Cet email est déjà utilisé, veuillez en choisir un autre')
         return res.redirect('/auth/register')
@@ -35,28 +37,21 @@ try {
 
 }); 
 
-/*router.get('/register', (req, res) => {
-    console.log('Messages flash:', req.flash('error'), req.flash('success')); // Ajout du console.log
-    res.render('register', {
-        title: 'Créer un compte',
-        error: req.flash('error'),
-        success: req.flash('success')
-    });
-});*/
 
 router.get('/register', (req, res) => {
-    /*req.flash('error', 'Test message erreur');*/ // Ajout d'un message d'erreur temporaire
-    res.render('register', { title: 'Créer un compte',
-                            messages: req.flash()});
+    res.render('register', { 
+         title: 'Créer un compte',
+         messages: req.flash()
+        });
 });
-
 
 router.get('/login', (req, res) => {
     res.render('login', {
         title: 'Connexion',
-        error: req.flash('error'), 
-        success: req.flash('success')}); 
-}); // Rends le formulaire de connexion avec les éventuels messages de succès ou d'erreur
+        messages: req.flash()
+    }); 
+}); 
+
 
 router.get('/forgot-password', (req, res) => {
     res.render('forgot-password', { title: 'Mot de passe oublié' });
@@ -72,7 +67,9 @@ router.post('/forgot-password', async(req, res) => {
           return res.redirect('/auth/forgot-password');
         }
 
-        const resetToken = Math.random().toString(36).substring(2);
+        
+        
+        const resetToken = crypto.randomBytes(32).toString('hex');
         console.log(`Token de réinitialisation : ${resetToken}`);
         req.flash('success', 'Un email avec des instructions a été envoyé.')
         res.redirect('/auth/login');
@@ -108,11 +105,13 @@ router.post('/login', (req, res, next) => {
 
 // deconnexion
 router.get('/logout', (req, res) => {
-    req.logout((err) => {
+    req.session.destroy((err) => {
         if (err) {
-            return res.status(500).json({ message: 'Erreur lors de la déconnexion', error: err });
+            req.flash( 'error', 'Erreur lors de la déconnexion');
+            return res.redirect('/auth/login');
         }
-        res.redirect('/auth/login');
+        req.flash('success', 'Deconnexion réussie')
+        return res.redirect('/auth/login');
     });
 });
 
