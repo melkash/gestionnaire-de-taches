@@ -54,7 +54,10 @@ router.get('/login', (req, res) => {
 
 
 router.get('/forgot-password', (req, res) => {
-    res.render('forgot-password', { title: 'Mot de passe oublié' });
+    res.render('forgot-password', 
+        { title: 'Mot de passe oublié',
+          messages: req.flash()
+         });
 });
 
 router.post('/forgot-password', async(req, res) => {
@@ -67,8 +70,6 @@ router.post('/forgot-password', async(req, res) => {
           return res.redirect('/auth/forgot-password');
         }
 
-        
-        
         const resetToken = crypto.randomBytes(32).toString('hex');
         console.log(`Token de réinitialisation : ${resetToken}`);
         req.flash('success', 'Un email avec des instructions a été envoyé.')
