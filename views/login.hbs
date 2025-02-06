@@ -11,12 +11,6 @@
     <div class="container d-flex justify-content-center align-items-center vh-100">
         <div class="card p-4 shadow-sm" style="width: 100%; max-width: 400px;">
             <h1 class="h3 mb-3 fw-normal text-center">{{title}}</h1>
-            {{#if success}}
-            <div class="alert alert-success mt-3 text-center">{{success}}</div>
-            {{/if}}
-            {{#if error}}
-                <div class="alert alert-danger mt-3 text-center">{{error}}</div>
-            {{/if}}
             <form action="/auth/login" method="POST">
                 <div class="form-group mb-3">
                     <label for="email" class="form-label" aria-label="Adresse email">Email :</label>

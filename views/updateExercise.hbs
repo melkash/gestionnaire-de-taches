@@ -9,14 +9,7 @@
 <body class="bg-light">
     <div class="container mt-5">
         <h1 class="text-primary text-center mb-4">{{title}}</h1>
-         {{#if success}}
-           <div class="alert alert-success text-center">{{success}}</div>
-         {{/if}}
-
-         {{#if error}}
-           <div class="alert alert-danger text-center">{{error}}</div>
-         {{/if}}
-    <form action="/exercises/{{exercise._id}}?_method=PUT" method="POST" class="p-4 border rounded shadow-sm bg-light mb-5">
+         <form action="/exercises/{{exercise._id}}?_method=PUT" method="POST" class="p-4 border rounded shadow-sm bg-light mb-5">
             <input type="hidden" name="_method" value="PUT">
 
             <!-- Type -->

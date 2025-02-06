@@ -10,13 +10,7 @@
 <body class="bg-light">
   <div class="container mt-5">
      <h1 class="text-primary text-center mb-4">{{title}}</h1>
-     {{#if success}}
-     <div class="alert alert-success text-center mt-3">{{success}}</div>
-     {{/if}}
-     {{#if error}}
-     <div class="alert alert-danger text-center mt-3">{{error}}</div>
-     {{/if}}
- <form action="/exercises" method="POST" class="mt-4">
+     <form action="/exercises" method="POST" class="mt-4">
    <div class="mb-3">
         <label for="type" class="form-label">Type:</label>
         <input type="text" 

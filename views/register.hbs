@@ -12,12 +12,6 @@
     <div class="row justify-content-center">
     <div class="col-lg-6 col-md-8 col-sm-10">
     <h1 class="text-primary text-center mb-4">{{title}}</h1>
-{{#if error}}
-   <div class="alert alert-danger text-center mb-3">{{error}}</div>
-{{/if}}
-{{#if success}}
-   <div class="alert alert-success text-center mb-3">{{success}}</div>
-{{/if}}
 <form action="/auth/register" method="POST" class="p-4 border rounded shadow-sm">
     <div class="mb-3">
       <label for="email" class="form-label">
