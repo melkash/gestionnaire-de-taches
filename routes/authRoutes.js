@@ -37,27 +37,32 @@ try {
 
 }); 
 
+router.get('/test-flash', (req, res) => {
+    req.flash('success', 'Test réussi !');
+    req.flash('error', 'Ceci est un test d’erreur.');
+    res.redirect('/auth/login'); 
+});
+
+
 
 router.get('/register', (req, res) => {
     res.render('register', { 
-         title: 'Créer un compte',
-         messages: req.flash()
-        });
+         title: 'Créer un compte'
+    });
 });
 
 router.get('/login', (req, res) => {
-    res.render('login', {
-        title: 'Connexion',
-        messages: req.flash()
-    }); 
-}); 
+    const successMessage = req.cookies.flash_success;
+    res.clearCookie('flash_success');
+    res.render('login', { successMessage });
+    
+});
 
 
 router.get('/forgot-password', (req, res) => {
-    res.render('forgot-password', 
-        { title: 'Mot de passe oublié',
-          messages: req.flash()
-         });
+    res.render('forgot-password', { 
+        title: 'Mot de passe oublié'
+    });
 });
 
 router.post('/forgot-password', async(req, res) => {
@@ -91,7 +96,7 @@ router.post('/login', (req, res, next) => {
             return next(err);
         }
         if (!user) {
-            req.flash('error', 'Email ou mot de passe incorrect'); // Message d'erreur pour l'utilisateur
+            req.flash('error', 'Email ou mot de passe incorrect');
             return res.redirect('/auth/login');
         }
         req.logIn(user, (err) => {
@@ -106,13 +111,14 @@ router.post('/login', (req, res, next) => {
 
 // deconnexion
 router.get('/logout', (req, res) => {
-    req.session.destroy((err) => {
+      req.session.destroy((err) => {
         if (err) {
-            req.flash( 'error', 'Erreur lors de la déconnexion');
+            console.error("Erreur lors de la déconnexion :", err);
+            req.flash('error','Erreur lors de la déconnexion')
             return res.redirect('/auth/login');
-        }
-        req.flash('success', 'Deconnexion réussie')
-        return res.redirect('/auth/login');
+            }
+            res.cookie('flash_success','Déconnexion réussie', { maxAge: 1000, httpOnly: true });
+            return res.redirect('/auth/login');
     });
 });
 

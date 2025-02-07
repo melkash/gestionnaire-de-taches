@@ -10,6 +10,7 @@ import session from 'express-session';
 import passport from './config/autoConfig.js';
 import flash from 'connect-flash';
 import MongoStore from 'connect-mongo';
+import cookieParser from 'cookie-parser';
 
 
 
@@ -46,6 +47,7 @@ app.use(cors());
 app.use(express.json());
 app.use(express.static('public'));
 app.use(express.urlencoded({ extended: true }))
+app.use(cookieParser())
 app.use(session({
     secret: process.env.SESSION_SECRET,
     resave: false,
@@ -70,12 +72,15 @@ app.use(flash())
 
 // Middleware pour les messages flash
 app.use((req, res, next) => {
-  res.locals.success_msg = req.flash('success_msg');
-  res.locals.error_msg = req.flash('error_msg');
-  res.locals.error = req.flash('error'); // Utilisé par Passport pour les erreurs
-  res.locals.user = req.user;
-  next();
-});
+    res.locals.messages = {
+      success: req.flash('success'),
+      error: req.flash('error')
+    };
+    console.log("📢 Messages flash transmis aux vues :", res.locals.messages); 
+    res.locals.user = req.user;
+    next();
+  });
+  
 
 
 // Routes
