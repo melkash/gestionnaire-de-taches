@@ -9,12 +9,11 @@
         <ul class="navbar-nav me-auto"> 
            <!-- Liens visibles uniquement pour les utilisateurs connectés -->
           {{#if user}}
+           {{#unless (eq currentPath '/exercises')}}
             <li class="nav-item">
               <a class="nav-link" href="/exercises">Liste des exercices</a>
             </li>
-            <li class="nav-item">
-              <a class="nav-link" href="/exercises/new">Ajouter un exercice</a>
-            </li>
+            {{/unless}}
             {{/if}}
         </ul>
         <ul class="navbar-nav ms-auto">
@@ -23,17 +22,24 @@
               <a class="nav-link" href="/auth/logout">Se déconnecter</a>
             </li>
           {{else}}
-            <!-- Lien visible pour les utilisateurs non connectés -->
-            <li class="nav-item">
-              <a class="nav-link" href="/auth/login">Se connecter</a>
-            </li>
-            <li class="nav-item">
-             <a class="nav-link" href="/auth/register">S'inscrire</a>
-            </li>
+            <!-- Liens visibles uniquement pour les utilisateurs non connectés -->
+            {{#if (eq currentPath '/auth/login')}}
+              <!-- Ne rien afficher -->
+            {{else if (eq currentPath '/auth/register')}}
+              <!-- Ne rien afficher -->
+            {{else}}
+              <li class="nav-item">
+                <a class="nav-link" href="/auth/login">Se connecter</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/auth/register">S'inscrire</a>
+              </li>
+            {{/if}}
           {{/if}}
         </ul>
       </div>
     </div>
   </nav>
 </header>
+
 

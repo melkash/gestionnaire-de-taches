@@ -48,6 +48,8 @@ app.use(express.json());
 app.use(express.static('public'));
 app.use(express.urlencoded({ extended: true }))
 app.use(cookieParser())
+
+// Middleware de session (Avant Passport)
 app.use(session({
     secret: process.env.SESSION_SECRET,
     resave: false,
@@ -67,10 +69,15 @@ app.use(session({
 app.use(passport.initialize())
 app.use(passport.session())
 app.use(methodOverride('_method'))
-app.use(flash())
+
+app.use((req, res, next) => {
+    res.locals.currentPath = req.path
+    next()
+})
 
 
 // Middleware pour les messages flash
+app.use(flash())
 app.use((req, res, next) => {
     res.locals.messages = {
       success: req.flash('success'),
@@ -95,10 +102,6 @@ app.get('/', (req, res) => {
  });
 }); 
 
-// Route de test pour générer une erreur serveur
-app.get('/test-error', (req, res) => {
-    throw new Error( "Ceci est un test d'erreur" ); // Simule une erreur
-});
 
 // Middleware pour les erreurs 404 (page non trouvée)
 app.use((req, res) => {
@@ -118,11 +121,13 @@ app.use((err, req, res, next) => {
 });
 
 mongoose.connect(process.env.MONGO_URI)
-.then(() => console.log('Connecté à MongoDB'))
-.catch((error) => console.log('Erreur de connection à MongoDB:', error));
+.then(() => { 
+    console.log('Connecté à MongoDB');
+    app.listen(PORT, () => {
+        console.log(`Serveur en cours d'éxecution sur le ${PORT}`)   
+       });
+    })
+.catch((error) => {
+    console.log('Erreur de connection à MongoDB:', error);
+}); 
 
-
-// Démarrer le serveur
-app.listen(PORT, () => {
- console.log(`Serveur en cours d'éxecution sur le ${PORT}`)   
-});
