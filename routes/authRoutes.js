@@ -5,7 +5,7 @@ import User from '../model/userModel.js';
 const router = express.Router();
 
 // Inscription
-router.post('/register', async (req, res) => {
+router.post('/register', async (req, res, next) => {
     try {
         let { email, password } = req.body;
         email = email.trim();
@@ -27,9 +27,7 @@ router.post('/register', async (req, res) => {
         req.flash('success', 'Inscription réussie. Vous pouvez maintenant vous connecter.');
         res.redirect('/auth/login');
     } catch (error) {
-        console.error('🚨 Erreur lors de l\'inscription :', error);
-        req.flash('error', 'Une erreur est survenue');
-        res.redirect('/auth/register');
+        return next(error);  
     }
 });
 
@@ -50,8 +48,8 @@ router.get('/forgot-password', (req, res) => {
     res.render('forgot-password', { title: 'Mot de passe oublié' });
 });
 
-// Mot de passe oublié (soumission du formulaire)
-router.post('/forgot-password', async (req, res) => {
+// Mot de passe oublié (soumission du formulaire) 
+router.post('/forgot-password', async (req, res, next) => {
     const { email } = req.body;
 
     try {
@@ -61,15 +59,10 @@ router.post('/forgot-password', async (req, res) => {
             return res.redirect('/auth/forgot-password');
         }
 
-        // Ici, on pourrait générer un token pour l'email de réinitialisation
         req.flash('success', 'Un email avec des instructions a été envoyé.');
         res.redirect('/auth/login');
     } catch (error) {
-        console.error('🚨 Erreur lors de la réinitialisation :', error);
-        res.status(500).render('error', { 
-            title: 'Erreur de réinitialisation', 
-            message: 'Une erreur est survenue.'
-        });
+        return next(error);  
     }
 });
 
@@ -90,31 +83,21 @@ router.post('/login', async (req, res, next) => {
         }
 
         req.logIn(user, (err) => {
-            if (err) {
-                console.error("🚨 Erreur lors de la connexion :", err);
-                return next(err);
-            }
+            if (err) return next(err);  
             return res.redirect('/exercises');
         });
     } catch (error) {
-        console.error("🚨 Erreur lors de la recherche de l'utilisateur :", error);
-        req.flash('error', 'Une erreur est survenue. Veuillez réessayer.');
-        res.redirect('/auth/login');
+        return next(error);  
     }
 });
 
 // Déconnexion
-router.get('/logout', (req, res) => {
+router.get('/logout', (req, res, next) => {
     req.session.destroy((err) => {
-        if (err) {
-            console.error("🚨 Erreur lors de la déconnexion :", err);
-            req.flash('error', 'Erreur lors de la déconnexion');
-            return res.redirect('/auth/login');
-        }
+        if (err) return next(err);  
         res.cookie('flash_success', 'Déconnexion réussie', { maxAge: 1000, httpOnly: true });
-        return res.redirect('/auth/login');
+        res.redirect('/auth/login');
     });
 });
 
 export default router;
-
