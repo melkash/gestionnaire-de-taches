@@ -17,15 +17,22 @@ try {
     }
 
     const existingUser = await User.findOne({ email })
-       if(existingUser){
+     if(existingUser){
         req.flash('error', 'Cet email est déjà utilisé, veuillez en choisir un autre')
         return res.redirect('/auth/register')
        }
 
-    const hashedPassword = await bcrypt.hash(password, 10)
+    /*const hashedPassword = await bcrypt.hash(password, 10)*/
+    /*console.log("📢 Hash généré :", hashedPassword);*/
 
-   const newUser = new User ({ email, password: hashedPassword });
-   await newUser.save();
+    
+    const newUser = new User ({ email, password /*: hashedPassword*/ });
+    /*console.log("📢 Hash AVANT stockage :", hashedPassword);*/
+    console.log("📢 Nouvel utilisateur avant sauvegarde :", newUser);
+    await newUser.save();
+
+    const userInDb = await User.findOne({ email });
+    console.log("📢 Hash stocké en base :", userInDb.password)
 
    req.flash('success', 'Inscription réussie. Vous pouvez maintenant vous connecter.')
    res.redirect('/auth/login')
@@ -70,6 +77,7 @@ router.post('/forgot-password', async(req, res) => {
 
     try {
         const user = await User.findOne({ email });
+        console.log("📢 Utilisateur trouvé :", user);
         if(!user) {
           req.flash('error', 'Aucun compte trouvé pour cet email')
           return res.redirect('/auth/forgot-password');
@@ -90,22 +98,49 @@ router.post('/forgot-password', async(req, res) => {
 
 
 // connexion 
-router.post('/login', (req, res, next) => {
-    passport.authenticate('local', (err, user, info) => {
-        if (err) {
-            return next(err);
-        }
+router.post('/login', async (req, res, next) => { // Ajout de `async` ici
+    console.log("📢 Données reçues du formulaire :", req.body);
+
+    try {
+        // Vérifier si l'utilisateur existe en base
+        const user = await User.findOne({ email: req.body.email });
+        console.log("📢 Utilisateur trouvé en base :", user);
+
+
         if (!user) {
+            console.log("❌ Aucun utilisateur trouvé avec cet email.");
             req.flash('error', 'Email ou mot de passe incorrect');
             return res.redirect('/auth/login');
         }
-        req.logIn(user, (err) => {
-            if (err) {
-             return next(err);
-            }
-            return res.redirect('/exercises');
-        });
-    })(req, res, next);
+
+        console.log("🔍 Mot de passe reçu :", req.body.password);
+        console.log("🔍 Mot de passe stocké (hashé) :", user.password);
+
+        const isMatch = await bcrypt.compare(req.body.password, user.password);
+        
+
+        console.log("📢 bcrypt.compare() :", isMatch);
+
+        if (!isMatch) {
+            console.log("❌ Mot de passe incorrect.");
+            req.flash('error', 'Email ou mot de passe incorrect');
+            return res.redirect('/auth/login');
+        }
+
+            req.logIn(user, (err) => {
+                if (err) {
+                    console.error("🚨 Erreur lors de la connexion :", err);
+                    return next(err);
+                }
+                console.log("✅ Connexion réussie pour :", user.email);
+                return res.redirect('/exercises');
+            });
+        
+        } catch (error) {
+        console.error("🚨 Erreur lors de la recherche de l'utilisateur :", error);
+        req.flash('error', 'Une erreur est survenue. Veuillez réessayer.');
+        res.redirect('/auth/login');
+    }
 });
 
 

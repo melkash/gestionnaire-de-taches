@@ -122,12 +122,13 @@ app.use((err, req, res, next) => {
 
 mongoose.connect(process.env.MONGO_URI)
 .then(() => { 
-    console.log('Connecté à MongoDB');
+    console.log(`Connecté à MongoDB : ${process.env.MONGO_URI}`);
     app.listen(PORT, () => {
         console.log(`Serveur en cours d'éxecution sur le ${PORT}`)   
        });
     })
 .catch((error) => {
     console.log('Erreur de connection à MongoDB:', error);
+    fs.appendFileSync("mongoErrors.log", `[${new Date().toISOString()}] ${error}\n`);
 }); 
 
