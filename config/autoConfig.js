@@ -11,7 +11,6 @@ passport.use(
         return done(null, false, { message: 'Utilisateur non trouvé' });
       }
       const isMatch = await bcrypt.compare(password, user.password);
-      console.log("📢 bcrypt.compare() :", isMatch);
       if (!isMatch) {
         return done(null, false, { message: 'Mot de passe incorrect' });
       }
