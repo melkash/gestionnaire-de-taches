@@ -6,8 +6,8 @@ const router = express.Router();
 
 // Middleware pour authentification
 function ensureAuthenticated(req, res, next) {
-console.log('Session :', req.session);
-console.log('Utilisateur connecté :', req.isAuthenticated ? req.isAuthenticated() : false);
+logDev('Session :', req.session);
+logDev('Utilisateur connecté :', req.isAuthenticated ? req.isAuthenticated() : false);
     if (req.isAuthenticated()) {
         return next();
     }

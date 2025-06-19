@@ -1,72 +1,49 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gestionnaire de tâches</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-</head>
-<body class="bg-light">
-    <div class="container mt-5">
-        <h1 class="text-primary text-center mb-4">{{title}}</h1>
-        <div class="text-end mb-3">
-        <a href="/exercises/new" class="btn btn-success">
-         <i class="fas fa-plus"></i> Ajouter un exercice
+
+<div class="container mt-5">
+ <h1 class="text-primary text-center mb-4">{{title}}</h1>
+
+ <div class="text-end mb-3">
+   <a href="/exercises/new" class="btn btn-success">
+     <i class="fas fa-plus"></i> Ajouter un exercice
+</a>
+</div>
+
+<table class="table table-striped mt-4">
+  <thead class="table-dark">
+    <tr>
+      <th scope="col">Type</th>
+      <th scope="col">Durée</th>
+      <th scope="col">Distance</th>
+      <th scope="col">Statut</th>
+      <th scope="col">Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    {{#each exercises}}
+    <tr>
+      <td>{{this.type}}</td>
+      <td>{{#if this.duration}}{{this.duration}}min{{else}}-{{/if}}</td>
+      <td>{{#if this.distance}}{{this.distance}} km{{else}}-{{/if}}</td>
+      <td>
+        {{#if this.completed}}
+        <span class="badge bg-success">Complété</span>
+        {{else}}
+        <span class="badge bg-warning">Non complété</span>
+        {{/if}}
+      </td>
+      <td>
+        <a href="/exercises/{{this._id}}/edit" class="btn btn-warning btn-sm me-2 btn-custom">
+          <i class="fas fa-edit"></i> Modifier
         </a>
-        </div>
-        <table class="table table-striped mt-4">
-            <thead class="table-dark">
-                <tr>
-                    <th scope="col">Type</th>
-                    <th scope="col">Durée</th>
-                    <th scope="col">Distance</th>
-                    <th scope="col">Statut</th>
-                    <th scope="col">Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                {{#each exercises}}
-                <tr>
-                    <td>{{this.type}}</td>
-                    <td>
-                       {{#if this.duration}}
-                       {{this.duration}}min
-                       {{else}}
-                          -
-                       {{/if}}
-                    </td>
-                    <td>
-                       {{#if this.distance}}
-                        {{this.distance}} km
-                       {{else}}
-                           -
-                       {{/if}}
-                    </td>
-                    <td>
-                        {{#if this.completed}}
-                        <span class="badge bg-success">Complété</span>
-                        {{else}}
-                        <span class="badge bg-warning">Non complété</span>
-                        {{/if}}
-                        </td>
-                    <td>
-                        <a href="/exercises/{{this._id}}/edit" class="btn btn-warning btn-sm me-2 btn-custom">
-                        <i class="fas fa-edit"></i>Modifier
-                        </a>
-                        <form action="/exercises/{{this._id}}?_method=DELETE" method="POST" style="display: inline;"
-                          onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cet exercice ?');">
-                            <button type="submit" class="btn btn-danger btn-sm btn-custom">
-                              <i class="fas fa-trash-alt"></i>Supprimer
-                            </button>
-                        </form>
-                    </td>
-                </tr>
-                {{/each}}
-            </tbody>
-        </table>
-    </div>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js"></script>
-</body>
-</html>
+        <form action="/exercises/{{this._id}}?_method=DELETE" method="POST" style="display: inline;"
+          onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cet exercice ?');">
+          <button type="submit" class="btn btn-danger btn-sm btn-custom">
+            <i class="fas fa-trash-alt"></i> Supprimer
+          </button>
+        </form>
+      </td>
+    </tr>
+    {{/each}}
+  </tbody>
+ </table>
+</div>

@@ -15,6 +15,12 @@ router.post('/register', async (req, res, next) => {
             return res.redirect('/auth/register');
         }
 
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+         if(!emailRegex.test(email)){
+           req.flash("error", "Veuillez entrer un email valide")
+            return res.redirect("/auth/register")
+        }
+
         const existingUser = await User.findOne({ email });
         if (existingUser) {
             req.flash('error', 'Cet email est déjà utilisé, veuillez en choisir un autre');

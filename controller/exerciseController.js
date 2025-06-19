@@ -1,4 +1,5 @@
-import Exercise from '../model/exerciseModel.js'
+import Exercise from '../model/exerciseModel.js';
+import logDev from '../utils/logDev.js';
 
 export const getAllExercises = async (req, res) => {
    try {
@@ -41,7 +42,7 @@ export const createExercise = async (req, res) => {
         req.flash('success', 'Exercice ajouté avec succès')
         res.redirect('/exercises');
       } catch (error) {
-        console.error('Erreur lors de la création de l\'exercice :', error)
+        logDev('Erreur lors de la création de l\'exercice :', error)
         req.flash( 'error', 'Une erreur est survenue lors de la création');
         res.redirect('/exercises/new')
       }
@@ -70,7 +71,7 @@ export const updateExercise = async (req, res) => {
         req.flash('success', 'Exercice mis à jour avec succès.');
         res.redirect('/exercises');
       } catch (error) {
-        console.error('Erreur lors de la mise à jour :', error);
+        logDev('Erreur lors de la mise à jour :', error);
         req.flash('error', 'Une erreur est survenue.');
         return res.redirect(`/exercises/${req.params.id}/edit`);
     }

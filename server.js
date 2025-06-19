@@ -9,9 +9,11 @@ import passport from './config/autoConfig.js';
 import flash from 'connect-flash';
 import MongoStore from 'connect-mongo';
 import cookieParser from 'cookie-parser'; 
+import fs from 'fs';
 
 import exerciseRoutes from './routes/exerciseRoutes.js'
 import authRoutes from './routes/authRoutes.js';
+import logDev from './utils/logDev.js'
 
 
 
@@ -87,7 +89,7 @@ app.use((req, res, next) => {
       success: req.flash('success'),
       error: req.flash('error')
     };
-    console.log("📢 Messages flash transmis aux vues :", res.locals.messages); 
+    logDev("📢 Messages flash transmis aux vues :", res.locals.messages); 
     res.locals.user = req.user;
     next();
   });
@@ -97,6 +99,11 @@ app.use((req, res, next) => {
 // Routes
 app.use('/exercises', exerciseRoutes);
 app.use('/auth', authRoutes);
+app.get('/about', (req, res) => {
+    res.render('about', {
+        title: 'À propos'
+    })
+})
 
 
 // Route de base
@@ -117,7 +124,7 @@ app.use((req, res) => {
 
 // Middleware pour les erreurs 500 (erreur serveur)
 app.use((err, req, res, next) => {
-    console.error("🚨 Erreur serveur :", err);
+    logDev("🚨 Erreur serveur :", err);
     res.status(500).render('error', {
         title: 'Erreur du serveur',
         message: 'Une erreur inattendue est survenue. Veuillez réessayer plus tard.'
@@ -128,13 +135,13 @@ app.use((err, req, res, next) => {
 // Connexion à MongoDB
 mongoose.connect(process.env.MONGO_URI)
 .then(() => { 
-    console.log(" Connecté à MongoDB avec succès !");
+    logDev(" Connecté à MongoDB avec succès !");
     app.listen(PORT, () => {
-        console.log(`Serveur en cours d'éxecution sur le ${PORT}`)   
+        logDev(`Serveur en cours d'exécution sur le ${PORT}`)   
        });
     })
 .catch((error) => {
-    console.error('Erreur de connection à MongoDB:', error);
+    logDev('Erreur de connection à MongoDB:', error);
     fs.appendFileSync("mongoErrors.log", `[${new Date().toISOString()}] ${error}\n`);
 }); 
 
