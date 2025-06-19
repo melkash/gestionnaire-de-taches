@@ -86,6 +86,8 @@ export const deleteExercise = async (req, res) => {
             title: 'Erreur',
             message: 'Exercice non trouvé'})  
         }
+
+        req.flash('success', 'exercice supprimé avec succès')
         res.redirect('/exercises');
     } catch (error) {
        res.status(500).render('error', {

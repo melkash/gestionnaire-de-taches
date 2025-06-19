@@ -1,6 +1,7 @@
 import express from "express";
 import { getAllExercises, createExercise, updateExercise, deleteExercise } from "../controller/exerciseController.js";
 import Exercise from '../model/exerciseModel.js';
+import logDev from "../utils/logDev.js";
 
 const router = express.Router();
 
