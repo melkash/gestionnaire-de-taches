@@ -50,9 +50,12 @@ app.set('view engine', '.hbs')
 app.use(cors());
 app.use(express.json());
 app.use(express.static('public'));
-app.use(express.urlencoded({ extended: true }))
-app.use(cookieParser())
-app.use(methodOverride('_method'))
+app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
+app.use(methodOverride('_method'));
+
+// ✅ Indique à Express qu’il est derrière un proxy (Render)
+app.set('trust proxy', 1);
 
 // Middleware de session (Avant Passport)
 app.use(session({
