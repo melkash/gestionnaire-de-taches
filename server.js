@@ -38,8 +38,6 @@ const hbs = create({
 })
 
 hbs.handlebars.registerHelper('eq', (a, b) => a === b);
-hbs.handlebars.registerPartial('header', 'views/partials/header.hbs');
-hbs.handlebars.registerPartial('footer', 'views/partials/footer.hbs');
 
 
 app.engine('.hbs', hbs.engine)
