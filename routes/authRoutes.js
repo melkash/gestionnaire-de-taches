@@ -42,7 +42,7 @@ router.get('/register', (req, res) => {
     res.render('register', { title: 'Créer un compte' });
 });
 
-// Page de connexion
+// Page de connexion (affichage de la page)
 router.get('/login', (req, res) => {
     const successMessage = req.cookies.flash_success;
     res.clearCookie('flash_success');
@@ -99,6 +99,14 @@ router.post('/login', async (req, res, next) => {
 
 // Déconnexion
 router.get('/logout', (req, res, next) => {
+    /*
+     * On ne peut pas utiliser req.flash() ici,
+     * car la session est détruite immédiatement après.
+     * Donc le message flash serait perdu avant la redirection.
+     *
+     * Solution : on stocke un message temporaire dans un cookie
+     * que la page de login pourra lire juste après la redirection.
+     */
     req.session.destroy((err) => {
         if (err) return next(err);  
         res.cookie('flash_success', 'Déconnexion réussie', { maxAge: 1000, httpOnly: true });
