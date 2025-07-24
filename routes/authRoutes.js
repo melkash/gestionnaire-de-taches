@@ -46,7 +46,7 @@ router.get('/register', (req, res) => {
 router.get('/login', (req, res) => {
     const successMessage = req.cookies.flash_success;
     res.clearCookie('flash_success');
-    res.render('login', { successMessage });
+    res.render('login', { title: 'Connexion', successMessage });
 });
 
 // Mot de passe oublié (affichage du formulaire)
