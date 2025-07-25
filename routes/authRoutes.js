@@ -51,7 +51,7 @@ router.get('/login', (req, res) => {
 
 // Mot de passe oublié (affichage du formulaire)
 router.get('/forgot-password', (req, res) => {
-    res.render('forgot-password', { title: 'Mot de passe oublié' });
+    res.render('forgot-password', { title: 'Réinitialiser le mot de passe' });
 });
 
 // Mot de passe oublié (soumission du formulaire) 
